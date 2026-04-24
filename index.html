@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>BADAKIN WA PRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:#0a0a0f;overflow-x:hidden;}
+
+/* VIDEO BACKGROUND LOGIN FULLSCREEN */
+.video-login-bg{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+.login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);z-index:1;}
+.login-container{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;position:relative;z-index:10;}
+
+.video-intro{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:2000;background:#000;}
+.skip-container{position:fixed;bottom:0;left:0;width:100%;z-index:2001;display:flex;justify-content:center;padding:30px;}
+.skip-intro{background:#ff4444;border:none;padding:14px 40px;border-radius:60px;color:#fff;font-weight:bold;font-size:16px;cursor:pointer;box-shadow:0 5px 20px rgba(0,0,0,0.3);transition:0.2s;}
+.skip-intro:hover{transform:scale(1.02);}
+
+.login-box{background:rgba(15,25,35,0.85);backdrop-filter:blur(10px);border-radius:32px;padding:40px;width:380px;text-align:center;border:1px solid #00ff8833;}
+.logo-img{width:100px;height:100px;margin:0 auto 16px;display:block;border-radius:50%;object-fit:cover;border:2px solid #00ff88;}
+.logo-fallback{width:100px;height:100px;margin:0 auto 16px;display:none;background:linear-gradient(135deg,#00ff88,#00a6ff);border-radius:50%;align-items:center;justify-content:center;}
+.logo-fallback i{font-size:50px;color:#000;}
+.login-box h1{font-size:28px;background:linear-gradient(90deg,#00ff88,#00a6ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.login-box input{width:100%;padding:12px;margin:10px 0;background:rgba(255,255,255,0.05);border:1px solid #333;border-radius:16px;color:#fff;}
+.login-box input:focus{outline:none;border-color:#00ff88;}
+.login-box button{width:100%;padding:12px;background:linear-gradient(90deg,#00ff88,#00a6ff);border:none;border-radius:40px;font-weight:bold;cursor:pointer;}
+.dashboard{display:none;position:relative;min-height:100vh;padding-bottom:70px;}
+.video-bg{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2;}
+.bg-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:-1;}
+.main-container{max-width:500px;margin:0 auto;padding:20px;position:relative;z-index:10;}
+.header{background:rgba(15,25,35,0.85);backdrop-filter:blur(10px);border-radius:24px;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.logo-small{display:flex;align-items:center;gap:10px;}
+.logo-small img{width:36px;height:36px;border-radius:50%;object-fit:cover;}
+.logo-small-fallback{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00ff88,#00a6ff);display:none;align-items:center;justify-content:center;}
+.logo-small-fallback i{font-size:18px;color:#000;}
+.logo-small span{font-size:18px;font-weight:800;background:linear-gradient(90deg,#00ff88,#00a6ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.user-role{background:#00ff8820;color:#00ff88;padding:4px 12px;border-radius:40px;font-size:11px;}
+.logout-btn{background:#ff4444;border:none;padding:6px 16px;border-radius:40px;cursor:pointer;}
+.welcome-card{background:rgba(15,25,35,0.85);backdrop-filter:blur(10px);border-radius:24px;padding:15px;margin-bottom:20px;text-align:center;}
+.welcome-card h3{color:#00ff88;font-size:16px;}
+.stats{display:flex;gap:10px;margin-bottom:20px;}
+.stat-card{background:rgba(15,25,35,0.85);backdrop-filter:blur(10px);border-radius:16px;padding:12px;text-align:center;flex:1;}
+.stat-card i{font-size:20px;color:#00ff88;}
+.stat-card h3{font-size:18px;}
+.section{background:rgba(15,25,35,0.85);backdrop-filter:blur(10px);border-radius:24px;padding:20px;margin-bottom:20px;}
+.section-title{color:#00ff88;font-size:16px;margin-bottom:15px;}
+input,textarea{width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid #333;border-radius:16px;color:#fff;margin-bottom:10px;}
+button{background:linear-gradient(90deg,#00ff88,#00a6ff);border:none;padding:12px;border-radius:40px;font-weight:bold;cursor:pointer;width:100%;}
+.result-box{background:rgba(0,0,0,0.6);border-radius:16px;padding:12px;margin-top:15px;font-size:12px;color:#aaa;text-align:center;}
+.badakin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;}
+.badakin-btn{background:#1a2a3a;border:none;padding:12px;border-radius:16px;color:#fff;font-size:12px;cursor:pointer;text-align:center;}
+.badakin-btn.active{background:linear-gradient(90deg,#00ff88,#00a6ff);color:#000;}
+.delay-slider{display:flex;align-items:center;gap:10px;margin-bottom:15px;}
+.delay-slider input{flex:1;}
+.progress-step{display:flex;justify-content:space-between;margin-bottom:15px;}
+.progress-step div{flex:1;text-align:center;padding:8px;font-size:10px;color:#888;border-bottom:2px solid #333;}
+.progress-step div.active{color:#00ff88;border-bottom-color:#00ff88;}
+
+/* QR Section */
+.qr-section{background:rgba(15,25,35,0.85);backdrop-filter:blur(10px);border-radius:24px;padding:20px;margin-bottom:20px;}
+.qr-section .section-title{color:#00ff88;font-size:16px;margin-bottom:15px;}
+.qr-input-group{display:flex;gap:10px;}
+.qr-input-group input{flex:1;margin-bottom:0;}
+.qr-input-group button{width:auto;padding:12px 20px;background:linear-gradient(90deg,#00ff88,#00a6ff);border:none;border-radius:16px;font-weight:bold;cursor:pointer;}
+.qr-result{display:flex;flex-direction:column;align-items:center;margin-top:20px;padding:15px;background:rgba(0,0,0,0.5);border-radius:16px;}
+#qrcode{display:flex;justify-content:center;align-items:center;padding:10px;background:#fff;border-radius:16px;}
+#qrUrl{font-size:11px;color:#aaa;margin-top:10px;word-break:break-all;text-align:center;}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(15,25,35,0.95);display:flex;justify-content:space-around;padding:10px;border-top:1px solid #00ff8820;}
+.nav-item{text-align:center;color:#888;cursor:pointer;}
+.nav-item i{font-size:22px;}
+.nav-item span{font-size:10px;display:block;}
+.nav-item.active{color:#00ff88;}
+.page{display:none;}
+.page.active{display:block;}
+footer{text-align:center;margin-top:20px;color:#555;font-size:10px;}
+@media (max-width:600px){.badakin-grid{grid-template-columns:1fr;}.qr-input-group{flex-direction:column;}.qr-input-group button{width:100%;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE WITH VIDEO BACKGROUND -->
+<video id="loginBgVideo" class="video-login-bg" autoplay loop playsinline muted>
+<source src="https://files.catbox.moe/5krwwz.mp4" type="video/mp4">
+</video>
+<div class="login-overlay"></div>
+
+<div id="loginContainer" class="login-container">
+<div class="login-box">
+<div id="loginLogoContainer">
+<img id="loginLogo" class="logo-img" src="https://files.catbox.moe/trrvsk.jpg" alt="Logo" onerror="this.style.display='none'; document.getElementById('loginLogoFallback').style.display='flex';">
+<div id="loginLogoFallback" class="logo-fallback"><i class="fas fa-dragon"></i></div>
+</div>
+<h1>BADAKIN WA PRO</h1>
+<p style="color:#888;margin-bottom:20px;">WhatsApp Blaster Ultimate</p>
+<input type="text" id="loginUser" placeholder="Username">
+<input type="password" id="loginPass" placeholder="Password">
+<button onclick="login()">LOGIN</button>
+<div id="loginError" style="color:#ff4444;margin-top:15px;"></div>
+<div style="margin-top:20px;font-size:11px;color:#444;">Daftar via Telegram: /daftar username password role</div>
+</div>
+</div>
+
+<div id="videoIntroContainer" style="display:none;">
+<video id="introVideo" class="video-intro" autoplay playsinline>
+<source src="https://files.catbox.moe/ef8abo.mp4" type="video/mp4">
+</video>
+<div class="skip-container">
+<button class="skip-intro" onclick="skipIntro()">SKIP</button>
+</div>
+</div>
+
+<div id="dashboard" class="dashboard">
+<video id="bgVideo" class="video-bg" autoplay loop playsinline muted>
+<source src="https://files.catbox.moe/malvka.mp4" type="video/mp4">
+</video>
+<div class="bg-overlay"></div>
+
+<div class="main-container">
+<div class="header">
+<div class="logo-small">
+<div id="dashLogoContainer">
+<img id="dashLogo" src="https://files.catbox.moe/1uukop.jpg" alt="Logo" onerror="this.style.display='none'; document.getElementById('dashLogoFallback').style.display='flex';">
+<div id="dashLogoFallback" class="logo-small-fallback"><i class="fas fa-dragon"></i></div>
+</div>
+<span>BADAKIN WA PRO</span>
+</div>
+<div><span id="userRole" class="user-role">-</span> <button class="logout-btn" onclick="logout()">LOGOUT</button></div>
+</div>
+
+<div class="welcome-card"><h3 id="welcomeUser">🔥 BADAKIN ACTIVATED</h3></div>
+
+<div class="stats">
+<div class="stat-card"><i class="fas fa-paper-plane"></i><h3 id="statSent">0</h3><p>Terkirim</p></div>
+<div class="stat-card"><i class="fas fa-check-circle"></i><h3 id="statSuccess">0</h3><p>Berhasil</p></div>
+<div class="stat-card"><i class="fas fa-times-circle"></i><h3 id="statFailed">0</h3><p>Gagal</p></div>
+</div>
+
+<!-- NAVIGATION -->
+<div class="bottom-nav">
+<div class="nav-item active" data-page="badakin"><i class="fas fa-dragon"></i><span>BADAKIN</span></div>
+<div class="nav-item" data-page="qr"><i class="fas fa-qrcode"></i><span>QR CODE</span></div>
+</div>
+
+<!-- PAGE BADAKIN -->
+<div id="pageBadakin" class="page active">
+<div class="section">
+<div class="section-title"><i class="fas fa-dragon"></i> SELECT BADAKIN</div>
+<input type="text" id="targetNumber" placeholder="📱 NOMOR TARGET (628xxxxx)">
+<div class="badakin-grid">
+<div class="badakin-btn" data-badak="1">ANTI BAND 1</div>
+<div class="badakin-btn" data-badak="2">ANTI BATASIN</div>
+<div class="badakin-btn" data-badak="3">ANTI ALL BAND</div>
+<div class="badakin-btn" data-badak="4">UNBAN WA 24J</div>
+<div class="badakin-btn" data-badak="5">COMBO BADAKIN</div>
+<div class="badakin-btn" data-badak="6">CRASH GROUP</div>
+</div>
+<textarea id="badakinMsg" rows="2" placeholder="💬 PESAN (opsional)"></textarea>
+<div class="delay-slider"><i class="fas fa-hourglass-half"></i><input type="range" id="delayRange" min="3" max="15" value="5"><span id="delayValue">5</span>s</div>
+<div class="progress-step"><div id="step1">1.Payload</div><div id="step2">2.Server</div><div id="step3">3.Badak</div><div id="step4">4.Selesai</div></div>
+<button onclick="startBadakin()">BADAKIN!</button>
+<div id="badakinResult" class="result-box">⚡ Siap badakin</div>
+</div>
+</div>
+
+<!-- PAGE QR URL CONVERTER -->
+<div id="pageQr" class="page">
+<div class="qr-section">
+<div class="section-title"><i class="fas fa-qrcode"></i> URL TO QR CODE</div>
+<div class="qr-input-group">
+<input type="text" id="qrUrlInput" placeholder="https://example.com">
+<button onclick="generateQR()">BUAT QR</button>
+</div>
+<div id="qrResult" class="qr-result" style="display:none;">
+<div id="qrcode"></div>
+<div id="qrUrl" class="qr-url"></div>
+</div>
+</div>
+</div>
+
+<footer>BADAKIN WA PRO | @inforranz</footer>
+</div>
+</div>
+
+<script>
+const FIREBASE_URL = "https://badakinwa-ddbe8-default-rtdb.asia-southeast1.firebasedatabase.app/";
+let currentUser=null,currentRole=null,statSent=0,statSuccess=0,statFailed=0,selectedBadak=1;
+let introVideo=null, bgVideo=null;
+
+// Login background video play
+window.addEventListener('load', function() {
+    let loginVideo = document.getElementById('loginBgVideo');
+    if(loginVideo) {
+        loginVideo.play().catch(e => console.log("Autoplay need interaction"));
+    }
+});
+
+// Navigation
+document.querySelectorAll('.nav-item').forEach(item=>{
+    item.onclick=()=>{
+        document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+        item.classList.add('active');
+        let page=item.getAttribute('data-page');
+        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+        if(page==='badakin') document.getElementById('pageBadakin').classList.add('active');
+        if(page==='qr') document.getElementById('pageQr').classList.add('active');
+    };
+});
+
+document.querySelectorAll('.badakin-btn').forEach(btn=>{
+    btn.onclick=()=>{
+        document.querySelectorAll('.badakin-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedBadak=parseInt(btn.getAttribute('data-badak'));
+    };
+});
+document.querySelector('.badakin-btn').click();
+
+let delayRange=document.getElementById('delayRange'),delayValue=document.getElementById('delayValue');
+delayRange.oninput=()=>{delayValue.innerText=delayRange.value;};
+
+function resetSteps(){for(let i=1;i<=4;i++)document.getElementById('step'+i).classList.remove('active');}
+function setStep(s){resetSteps();for(let i=1;i<=s;i++)document.getElementById('step'+i).classList.add('active');}
+
+function skipIntro(){
+    let introDiv=document.getElementById('videoIntroContainer');
+    introDiv.style.display='none';
+    if(introVideo) introVideo.pause();
+    document.getElementById('dashboard').style.display='block';
+    if(bgVideo) bgVideo.play().catch(e=>console.log);
+}
+
+async function login(){
+    let u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value.trim();
+    if(!u||!p)return;
+    try{
+        let res=await fetch(`${FIREBASE_URL}users/${u}.json`);
+        let data=await res.json();
+        if(data&&data.password===p){
+            currentUser=u;currentRole=data.role;
+            localStorage.setItem('badakin_user',u);
+            document.getElementById('loginContainer').style.display='none';
+            
+            let introDiv=document.getElementById('videoIntroContainer');
+            introDiv.style.display='block';
+            introVideo=document.getElementById('introVideo');
+            bgVideo=document.getElementById('bgVideo');
+            
+            introVideo.muted=false;
+            introVideo.play().catch(e=>{
+                introVideo.muted=true;
+                introVideo.play();
+            });
+            
+            document.getElementById('userRole').innerText=currentRole.toUpperCase();
+            document.getElementById('welcomeUser').innerHTML=`Selamat datang, ${u} (${currentRole})`;
+        }else{document.getElementById('loginError').innerText='Username atau password salah!';}
+    }catch(e){document.getElementById('loginError').innerText='Error koneksi!';}
+}
+function logout(){localStorage.clear();location.reload();}
+if(localStorage.getItem('badakin_user'))document.getElementById('loginUser').value=localStorage.getItem('badakin_user');
+
+function rand(){return Math.random().toString(36).substring(2,6);}
+async function sendWA(to,msg){
+    try{await fetch(`https://api.telegram.org/bot8643951893:AAGsCjCwgcoF8mmLfwybl7Sy6ip7tLS6MjQ/sendMessage?chat_id=1682354183&text=Pesan ke ${to}: ${msg.substring(0,100)}`);return true;}catch(e){return false;}
+}
+function upStats(){
+    document.getElementById('statSent').innerHTML=statSent;
+    document.getElementById('statSuccess').innerHTML=statSuccess;
+    document.getElementById('statFailed').innerHTML=statFailed;
+}
+
+async function startBadakin(){
+    let to=document.getElementById('targetNumber').value.trim();
+    let msg=document.getElementById('badakinMsg').value.trim();
+    if(!to)return alert('Masukkan nomor!');
+    if(!to.startsWith('62'))to='62'+to.replace(/^0+/,'');
+    let btn=event.target;
+    let d=parseInt(delayRange.value);
+    let t=['','ANTI BAND 1','ANTI BATASIN','ANTI ALL BAND','UNBAN WA 24J','COMBO BADAKIN','CRASH GROUP'];
+    let b=t[selectedBadak];
+    let fm=msg?`[${b}] ${msg} [${rand()}]`:`[${b}] AKTIF [${rand()}]`;
+    btn.disabled=true;btn.style.opacity='0.5';
+    setStep(1);document.getElementById('badakinResult').innerHTML='🔧 Payload...';
+    await new Promise(r=>setTimeout(r,d*300));
+    setStep(2);document.getElementById('badakinResult').innerHTML='🌐 Server...';
+    await new Promise(r=>setTimeout(r,d*300));
+    setStep(3);document.getElementById('badakinResult').innerHTML=`🐉 ${b} AKTIF!`;
+    await new Promise(r=>setTimeout(r,d*300));
+    let ok=await sendWA(to,fm);
+    setStep(4);
+    if(ok){
+        document.getElementById('badakinResult').innerHTML=`✅ BERHASIL! ${b} terkirim`;
+        statSent++;statSuccess++;
+    }else{
+        document.getElementById('badakinResult').innerHTML=`❌ GAGAL!`;
+        statSent++;statFailed++;
+    }
+    upStats();btn.disabled=false;btn.style.opacity='1';
+    setTimeout(()=>{setStep(0);document.getElementById('badakinResult').innerHTML='⚡ Siap badakin';},2000);
+}
+
+// QR CODE GENERATOR
+function generateQR() {
+    let url = document.getElementById('qrUrlInput').value.trim();
+    if(!url) {
+        alert('Masukkan URL dulu bos!');
+        return;
+    }
+    if(!url.startsWith('http')) {
+        url = 'https://' + url;
+    }
+    let qrContainer = document.getElementById('qrcode');
+    qrContainer.innerHTML = '';
+    new QRCode(qrContainer, {
+        text: url,
+        width: 180,
+        height: 180,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+    document.getElementById('qrResult').style.display = 'flex';
+    document.getElementById('qrUrl').innerHTML = url;
+}
+</script>
+</body>
+</html>
